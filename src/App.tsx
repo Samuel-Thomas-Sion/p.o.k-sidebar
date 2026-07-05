@@ -9,8 +9,8 @@ export default function App() {
     <div className="flex justify-center min-h-screen bg-black/90 p-4 font-serif text-[#e5cc98]">
       {/* Sidebar Container */}
       <motion.div
-        whileHover={{ boxShadow: "inset 0 0 30px #000, 0 0 20px rgba(184,134,11,0.2)" }}
-        transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.02, rotate: [0, 1, -1, 0], boxShadow: "inset 0 0 40px #000, 0 0 30px rgba(255,215,0,0.4)" }}
+        transition={{ type: "tween", bounce: 0.5 }}
         className="relative w-[300px] bg-gradient-to-b from-[#1a1a1a] to-[#0d0d0d] border-l-2 border-r-2 border-[#b8860b] shadow-[inset_0_0_20px_#000] overflow-hidden rounded-md pb-6"
       >
         
@@ -37,8 +37,8 @@ export default function App() {
               />
 
               <motion.div
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ repeat: Infinity, duration: 2 }}
+                animate={{ scale: [1, 1.2, 1], rotate: [0, 15, -15, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, type: "tween" }}
                 className="text-5xl drop-shadow-[0_0_10px_#ffcf54] mb-4"
               >
                 👑
@@ -49,8 +49,8 @@ export default function App() {
               <p className="text-[#c7a76c] text-sm mt-2 italic">Enter the Kingdom</p>
               
               <motion.button
-                whileHover={{ scale: 1.05, textShadow: "0px 0px 8px rgb(255,255,255)" }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0], textShadow: "0px 0px 12px rgb(255,215,0)" }}
+                whileTap={{ scale: 0.8, rotate: 10 }}
                 onClick={() => setGateOpen(true)}
                 className="mt-8 px-6 py-2 bg-gradient-to-b from-[#b8860b] to-[#8b6508] border-2 border-[#ffd700] text-white font-bold text-sm rounded shadow-[0_4px_10px_rgba(0,0,0,0.6)] hover:from-[#daa520] hover:to-[#b8860b] hover:shadow-[0_0_15px_#ffd700] transition-all duration-300 flex items-center gap-2 cursor-pointer"
               >
@@ -71,10 +71,10 @@ export default function App() {
             </h1>
             <p className="text-[#a89472] text-xs italic mt-1 mb-3">Strength • Unity • Loyalty</p>
             <div className="flex flex-col gap-2">
-              <motion.div whileHover={{ scale: 1.05 }} className="bg-black/50 border border-[#8b6508] p-1.5 text-xs rounded text-[#e5cc98] flex items-center justify-center gap-2 cursor-default">
+              <motion.div whileHover={{ scale: 1.1, rotate: 3, y: -2 }} transition={{ type: "tween", bounce: 0.7 }} className="bg-black/50 border border-[#8b6508] p-1.5 text-xs rounded text-[#e5cc98] flex items-center justify-center gap-2 cursor-default">
                 <Users size={14} /> Kingdom Members
               </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} className="bg-black/50 border border-[#8b6508] p-1.5 text-xs rounded text-[#e5cc98] flex items-center justify-center gap-2 cursor-default">
+              <motion.div whileHover={{ scale: 1.1, rotate: -3, y: -2 }} transition={{ type: "tween", bounce: 0.7 }} className="bg-black/50 border border-[#8b6508] p-1.5 text-xs rounded text-[#e5cc98] flex items-center justify-center gap-2 cursor-default">
                 <Castle size={14} /> Active Kingdom
               </motion.div>
             </div>
@@ -89,7 +89,7 @@ export default function App() {
                 <iframe className="w-full h-full border-none relative z-0 opacity-50 group-hover:opacity-100 transition-opacity" src="about:blank" title="New Members Placeholder" />
                 <span className="absolute z-20 text-[#ffd700] drop-shadow-md font-bold tracking-wider pointer-events-none">[LOREM_IPSUM]</span>
               </div>
-              <motion.button whileHover={{ scale: 1.02, backgroundColor: "#4a3c2b" }} whileTap={{ scale: 0.98 }} className="mt-3 w-full bg-gradient-to-b from-[#3a2e24] to-[#201812] border border-[#8b6508] hover:border-[#ffd700] text-[#ffd700] text-xs py-1.5 rounded transition-colors flex justify-center items-center gap-2 cursor-pointer">
+              <motion.button whileHover={{ scale: 1.1, rotate: 2, backgroundColor: "#4a3c2b" }} whileTap={{ scale: 0.8, rotate: -5 }} className="mt-3 w-full bg-gradient-to-b from-[#3a2e24] to-[#201812] border border-[#8b6508] hover:border-[#ffd700] text-[#ffd700] text-xs py-1.5 rounded transition-colors flex justify-center items-center gap-2 cursor-pointer">
                 Join the Ranks
               </motion.button>
             </div>
@@ -131,7 +131,7 @@ export default function App() {
                <div className="text-3xl mb-2 drop-shadow-[0_0_8px_#ffd700]">🎁</div>
                <h3 className="text-[#ffd700] text-sm font-bold mb-1 tracking-wider drop-shadow-sm">Celebrate With Us</h3>
                <p className="text-xs text-[#a89472] mb-4 relative z-10">Register your day of birth to be honored by the Kingdom.</p>
-               <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="relative z-10 w-full bg-gradient-to-b from-[#b8860b] to-[#8b6508] border border-[#ffd700] text-white text-xs font-bold py-2 rounded shadow-md hover:from-[#daa520] hover:to-[#b8860b] hover:shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer">
+               <motion.button whileHover={{ scale: 1.1, rotate: [0, -3, 3, 0] }} whileTap={{ scale: 0.8 }} transition={{ type: "tween", bounce: 0.6 }} className="relative z-10 w-full bg-gradient-to-b from-[#b8860b] to-[#8b6508] border border-[#ffd700] text-white text-xs font-bold py-2 rounded shadow-md hover:from-[#daa520] hover:to-[#b8860b] hover:shadow-[0_0_15px_rgba(255,215,0,0.8)] transition-all flex items-center justify-center gap-2 cursor-pointer">
                  <PartyPopper size={14} /> REGISTER BIRTHDAY
                </motion.button>
              </div>
@@ -154,25 +154,25 @@ export default function App() {
           {/* Partnerships */}
           <Section title="🤝 PARTNERSHIPS">
             <div className="flex flex-col gap-2">
-              <motion.div whileHover={{ scale: 1.03, x: 2, borderColor: "#ffd700" }} className="bg-black/40 border border-[#4a3c2b] p-2 text-center text-xs rounded hover:border-[#8b6508] transition-colors cursor-pointer text-[#d1bfae] hover:text-[#ffd700]">Alliance Hall</motion.div>
-              <motion.div whileHover={{ scale: 1.03, x: 2, borderColor: "#ffd700" }} className="bg-black/40 border border-[#4a3c2b] p-2 text-center text-xs rounded hover:border-[#8b6508] transition-colors cursor-pointer text-[#d1bfae] hover:text-[#ffd700]">Partner Kingdom Alpha</motion.div>
-              <motion.div whileHover={{ scale: 1.03, x: 2, borderColor: "#ffd700" }} className="bg-black/40 border border-[#4a3c2b] p-2 text-center text-xs rounded hover:border-[#8b6508] transition-colors cursor-pointer text-[#d1bfae] hover:text-[#ffd700]">Partner Kingdom Beta</motion.div>
+              <motion.div whileHover={{ scale: 1.1, rotate: -3, borderColor: "#ffd700" }} transition={{ type: "tween", bounce: 0.7 }} className="bg-black/40 border border-[#4a3c2b] p-2 text-center text-xs rounded hover:border-[#8b6508] transition-colors cursor-pointer text-[#d1bfae] hover:text-[#ffd700]">Alliance Hall</motion.div>
+              <motion.div whileHover={{ scale: 1.1, rotate: 3, borderColor: "#ffd700" }} transition={{ type: "tween", bounce: 0.7 }} className="bg-black/40 border border-[#4a3c2b] p-2 text-center text-xs rounded hover:border-[#8b6508] transition-colors cursor-pointer text-[#d1bfae] hover:text-[#ffd700]">Partner Kingdom Alpha</motion.div>
+              <motion.div whileHover={{ scale: 1.1, rotate: -3, borderColor: "#ffd700" }} transition={{ type: "tween", bounce: 0.7 }} className="bg-black/40 border border-[#4a3c2b] p-2 text-center text-xs rounded hover:border-[#8b6508] transition-colors cursor-pointer text-[#d1bfae] hover:text-[#ffd700]">Partner Kingdom Beta</motion.div>
             </div>
           </Section>
 
           {/* Quick Links */}
           <Section title="⚡ QUICK LINKS">
-            <motion.a whileHover={{ scale: 1.02, x: 2, y: -2 }} href="#" className="block text-center bg-gradient-to-b from-[#3a2e24] to-[#201812] border border-[#8b6508] text-[#ffd700] text-xs py-2 px-3 rounded hover:bg-gradient-to-b hover:from-[#4a3c2b] hover:to-[#2a2018] hover:shadow-[0_0_8px_rgba(184,134,11,0.6)] transition-all mb-2 flex items-center justify-center gap-2">
+            <motion.a whileHover={{ scale: 1.1, rotate: 3, y: -5 }} transition={{ type: "tween", bounce: 0.6 }} href="#" className="block text-center bg-gradient-to-b from-[#3a2e24] to-[#201812] border border-[#8b6508] text-[#ffd700] text-xs py-2 px-3 rounded hover:bg-gradient-to-b hover:from-[#4a3c2b] hover:to-[#2a2018] hover:shadow-[0_0_12px_rgba(184,134,11,0.8)] transition-all mb-2 flex items-center justify-center gap-2">
               <Castle size={14} /> Invitation Link
             </motion.a>
-            <motion.a whileHover={{ scale: 1.02, x: 2, y: -2 }} href="#" className="block text-center bg-gradient-to-b from-[#3a2e24] to-[#201812] border border-[#8b6508] text-[#ffd700] text-xs py-2 px-3 rounded hover:bg-gradient-to-b hover:from-[#4a3c2b] hover:to-[#2a2018] hover:shadow-[0_0_8px_rgba(184,134,11,0.6)] transition-all flex items-center justify-center gap-2">
+            <motion.a whileHover={{ scale: 1.1, rotate: -3, y: -5 }} transition={{ type: "tween", bounce: 0.6 }} href="#" className="block text-center bg-gradient-to-b from-[#3a2e24] to-[#201812] border border-[#8b6508] text-[#ffd700] text-xs py-2 px-3 rounded hover:bg-gradient-to-b hover:from-[#4a3c2b] hover:to-[#2a2018] hover:shadow-[0_0_12px_rgba(184,134,11,0.8)] transition-all flex items-center justify-center gap-2">
               <Scroll size={14} /> Advertising Forum
             </motion.a>
           </Section>
 
           {/* Kingdom Rules */}
           <Section title="📜 KINGDOM RULES">
-            <motion.div whileHover={{ scale: 1.02, rotate: -1 }} className="bg-[#dfc9a5] text-[#3b2a1a] p-3 rounded-sm text-xs shadow-[inset_0_0_15px_rgba(139,69,19,0.4)] border border-[#8b4513] relative font-serif cursor-default">
+            <motion.div whileHover={{ scale: 1.05, rotate: [0, -3, 3, 0], y: -5 }} transition={{ type: "tween", bounce: 0.6 }} className="bg-[#dfc9a5] text-[#3b2a1a] p-3 rounded-sm text-xs shadow-[inset_0_0_15px_rgba(139,69,19,0.4)] border border-[#8b4513] relative font-serif cursor-default">
               <h4 className="text-center font-bold border-b border-[#8b4513] pb-1 mb-2 tracking-wide text-[13px]">The Royal Decree</h4>
               <ul className="list-disc pl-4 space-y-1">
                 <li>Respect all members.</li>
@@ -185,7 +185,7 @@ export default function App() {
 
           {/* Inspiration */}
           <Section title="🕯 INSPIRATION">
-            <motion.div whileHover={{ scale: 1.02 }} className="italic text-xs text-center text-[#d1bfae] py-3 border-y border-[#4a3c2b] relative cursor-default">
+            <motion.div whileHover={{ scale: 1.1, rotate: 2 }} transition={{ type: "tween", bounce: 0.7 }} className="italic text-xs text-center text-[#d1bfae] py-3 border-y border-[#4a3c2b] relative cursor-default">
                <Quote className="absolute -top-2 left-2 text-[#4a3c2b]/30" size={24} />
               "Even the darkest night will end and the sun will rise upon the Kingdom."
             </motion.div>
@@ -208,8 +208,8 @@ export default function App() {
 function Section({ title, children }: { title: string, children: React.ReactNode }) {
   return (
     <motion.div
-      whileHover={{ y: -2, boxShadow: "0 8px 12px rgba(0,0,0,0.6), inset 0 0 15px rgba(184,134,11,0.2)" }}
-      transition={{ duration: 0.2 }}
+      whileHover={{ y: -8, rotate: [0, 1, -1, 0], scale: 1.03, boxShadow: "0 12px 20px rgba(0,0,0,0.8), inset 0 0 15px rgba(184,134,11,0.4)" }}
+      transition={{ type: "tween", bounce: 0.6 }}
       className="bg-gradient-to-br from-[#1f1b18] to-[#2a241f] border border-[#4a3c2b] rounded-md p-3 shadow-[0_4px_6px_rgba(0,0,0,0.4)] relative"
     >
       <div className="absolute inset-0 rounded-md shadow-[inset_0_0_10px_rgba(0,0,0,0.8)] pointer-events-none" />
@@ -226,7 +226,8 @@ function Section({ title, children }: { title: string, children: React.ReactNode
 function TitledMember({ badge, name, color }: { badge: string, name: string, color: string }) {
   return (
     <motion.div
-      whileHover={{ x: 5, backgroundColor: "rgba(40,30,20,0.9)" }}
+      whileHover={{ x: 10, scale: 1.1, rotate: 2, backgroundColor: "rgba(40,30,20,0.9)" }}
+      transition={{ type: "tween", stiffness: 400 }}
       className="flex items-center gap-2 p-1.5 bg-black/30 rounded border-l-2 border-transparent hover:bg-[#281e14]/80 hover:border-[#ffd700] transition-all cursor-pointer group"
     >
       <span className={`${color} text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm`}>
@@ -239,7 +240,7 @@ function TitledMember({ badge, name, color }: { badge: string, name: string, col
 
 function CourtMember({ role, name }: { role: string, name: string }) {
   return (
-    <motion.div whileHover={{ x: 5, scale: 1.02 }} className="cursor-pointer">
+    <motion.div whileHover={{ x: 10, scale: 1.1, rotate: -2 }} transition={{ type: "tween", stiffness: 400 }} className="cursor-pointer">
       <div className="text-[10px] text-[#b8860b] uppercase font-bold mb-0.5">{role}</div>
       <div className="text-xs text-[#e5cc98] flex items-center gap-1">
         <Shield size={12} className="text-[#8b6508]" /> {name}
@@ -251,7 +252,8 @@ function CourtMember({ role, name }: { role: string, name: string }) {
 function Milestone({ text, achieved }: { text: string, achieved: boolean }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.02, x: achieved ? 2 : 0 }}
+      whileHover={{ scale: 1.1, x: achieved ? 10 : -10, rotate: achieved ? 2 : -2 }}
+      transition={{ type: "tween", stiffness: 400 }}
       className={`flex justify-between py-1 border-b border-dashed border-[#4a3c2b] last:border-b-0 ${achieved ? 'text-[#ffd700]' : 'text-[#6a5e4d]'}`}
     >
       <span>{text}</span>
