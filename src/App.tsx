@@ -6,7 +6,7 @@ export default function App() {
   const [gateOpen, setGateOpen] = useState(false);
 
   return (
-    <div className="flex justify-center min-h-screen bg-black/90 p-4 font-serif text-[#e5cc98]">
+    <div className="flex justify-center min-h-screen bg-black/90 p-4 font-serif text-[#e5cc98] overflow-hidden">
       {/* Sidebar Container */}
       <motion.div
         whileHover={{ scale: 1.02, rotate: [0, 1, -1, 0], boxShadow: "inset 0 0 40px #000, 0 0 30px rgba(255,215,0,0.4)" }}
