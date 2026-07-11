@@ -420,7 +420,7 @@ export default function KingdomMusicPlayer() {
       <div className="flex flex-col gap-1 overflow-y-auto flex-1 pr-1 custom-scrollbar">
          {filteredPlaylist.length > 0 ? filteredPlaylist.map((song) => (
              <div
-                 key={song.id}
+                 key={`${song.id}-${song.index}`}
                  onClick={() => {
                      if (currentSongIndex === song.index) {
                          togglePlay();
