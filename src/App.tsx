@@ -318,6 +318,13 @@ export default function App() {
             <EventsTrackerWidget />
           </Section>
 
+          {/* Daily Puzzle */}
+          <Section title="🧩 DAILY PUZZLE">
+            <div className="flex justify-center w-full bg-black/40 border border-[#4a3c2b] rounded overflow-hidden">
+              <iframe src="https://lichess.org/training/frame?theme=brown&bg=dark" style={{ width: "100%", aspectRatio: "10/11" }} allowtransparency="true" frameBorder="0"></iframe>
+            </div>
+          </Section>
+
           {/* Kingdom Music Player */}
           <Section title="🎵 KINGDOM MUSIC PLAYER">
             <KingdomMusicPlayer />
