@@ -1,6 +1,229 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Crown, Users, Castle, Shield, PartyPopper, Scroll, Quote } from 'lucide-react';
+import KingdomMusicPlayer from './components/KingdomMusicPlayer';
+
+function NewMembersWidget() {
+  const [newMembers, setNewMembers] = useState<{username: string, joined: number}[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    async function fetchMembers() {
+      try {
+        const res = await fetch('https://api.chess.com/pub/club/people-of-kingdom/members');
+        
+        if (!res.ok) {
+          throw new Error('Failed to fetch club members');
+        }
+
+        const data = await res.json();
+        const allMembers: {username: string, joined: number}[] = [
+          ...(data.weekly || []),
+          ...(data.monthly || []),
+          ...(data.all_time || [])
+        ];
+        
+        allMembers.sort((a, b) => b.joined - a.joined);
+        setNewMembers(allMembers.slice(0, 3));
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchMembers();
+  }, []);
+
+  return (
+    <div className="bg-black/40 border border-[#4a3c2b] p-3 rounded text-center">
+      <div className="text-xs text-[#a89472] mb-2 italic">Welcome our newest allies</div>
+      
+      <div className="flex flex-col gap-2 min-h-[100px] justify-center relative">
+        {loading ? (
+          <div className="text-[10px] text-gray-500 animate-pulse">Summoning records...</div>
+        ) : error ? (
+          <div className="text-[10px] text-red-500/80">The archives are sealed.</div>
+        ) : (
+          newMembers.map((member, i) => (
+            <motion.div
+              key={member.username}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1, type: "tween", stiffness: 300 }}
+              className="flex items-center gap-2 p-1.5 bg-black/60 rounded border-l-2 border-[#8b6508] text-left overflow-hidden"
+            >
+              <div className="w-6 h-6 shrink-0 rounded-full bg-[#201812] border border-[#4a3c2b] flex items-center justify-center text-[10px] text-[#ffd700] uppercase font-bold shadow-[0_0_5px_#000]">
+                {member.username.charAt(0)}
+              </div>
+              <div className="flex flex-col overflow-hidden">
+                <span className="text-[11px] text-[#e5cc98] font-bold truncate block w-full">{member.username}</span>
+                <span className="text-[9px] text-[#a89472] block">Joined {new Date(member.joined * 1000).toLocaleDateString()}</span>
+              </div>
+            </motion.div>
+          ))
+        )}
+      </div>
+
+      <motion.button whileHover={{ scale: 1.1, rotate: 2, backgroundColor: "#4a3c2b" }} whileTap={{ scale: 0.8, rotate: -5 }} className="mt-3 w-full bg-gradient-to-b from-[#3a2e24] to-[#201812] border border-[#8b6508] hover:border-[#ffd700] text-[#ffd700] text-xs py-1.5 rounded transition-colors flex justify-center items-center gap-2 cursor-pointer">
+        Join the Ranks
+      </motion.button>
+    </div>
+  );
+}
+
+function TitledMembersWidget() {
+  const [titledMembers, setTitledMembers] = useState<{badge: string, name: string, color: string}[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    async function fetchTitledMembers() {
+      try {
+        let allMembers: string[] = [];
+        const res = await fetch('https://api.chess.com/pub/club/people-of-kingdom/members');
+        
+        if (res.ok) {
+          const data = await res.json();
+          allMembers = [
+            ...(data.weekly || []),
+            ...(data.monthly || []),
+            ...(data.all_time || [])
+          ].map((m: any) => m.username);
+        } else {
+          // Fallback if 403
+          const clubRes = await fetch('https://api.chess.com/pub/club/people-of-kingdom');
+          if (clubRes.ok) {
+            const clubData = await clubRes.json();
+            allMembers = (clubData.admin || []).map((adminUrl: string) => {
+              const parts = adminUrl.split('/');
+              return parts[parts.length - 1];
+            });
+          } else {
+            throw new Error('Failed to fetch club data');
+          }
+        }
+        
+        const titled: {badge: string, name: string, color: string}[] = [];
+        
+        const fetchProfile = async (username: string) => {
+          try {
+             const r = await fetch(`https://api.chess.com/pub/player/${username}`);
+             if (r.ok) {
+                const data = await r.json();
+                if (data.title) {
+                   titled.push({
+                      badge: data.title,
+                      name: data.username,
+                      color: "bg-[#b22222]" // red titles
+                   });
+                }
+             }
+          } catch(e) {}
+        };
+        
+        // chunk the requests to avoid rate limits
+        const chunkSize = 10;
+        for (let i = 0; i < allMembers.length; i += chunkSize) {
+           const chunk = allMembers.slice(i, i + chunkSize);
+           await Promise.all(chunk.map(fetchProfile));
+        }
+        
+        setTitledMembers(titled);
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchTitledMembers();
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-2 min-h-[50px] justify-center relative">
+      {loading ? (
+        <div className="text-[10px] text-gray-500 animate-pulse text-center">Searching archives...</div>
+      ) : error ? (
+        <div className="text-[10px] text-red-500/80 text-center">Failed to read scrolls.</div>
+      ) : titledMembers.length === 0 ? (
+         <div className="text-[10px] text-gray-500 text-center">No titled members found.</div>
+      ) : (
+        titledMembers.map((member, i) => (
+          <TitledMember key={member.name} badge={member.badge} name={member.name} color={member.color} />
+        ))
+      )}
+    </div>
+  );
+}
+
+function EventsTrackerWidget() {
+  const [matches, setMatches] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    async function fetchMatches() {
+      try {
+        const res = await fetch('https://api.chess.com/pub/club/people-of-kingdom/matches');
+        if (!res.ok) throw new Error('Failed to fetch matches');
+        const data = await res.json();
+        
+        const allMatches = [
+          ...(data.in_progress || []).map((m: any) => ({ ...m, status: 'Active' })),
+          ...(data.registered || []).map((m: any) => ({ ...m, status: 'Upcoming' })),
+          ...(data.finished || []).map((m: any) => ({ ...m, status: 'Completed' }))
+        ];
+        
+        setMatches(allMatches.slice(0, 3));
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchMatches();
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-2 min-h-[50px] justify-center relative">
+      {loading ? (
+        <div className="text-[10px] text-gray-500 animate-pulse text-center">Scouting battlefields...</div>
+      ) : error ? (
+        <div className="text-[10px] text-red-500/80 text-center">Scouts lost in the fog.</div>
+      ) : matches.length === 0 ? (
+        <div className="text-[10px] text-gray-500 text-center">No battles found.</div>
+      ) : (
+        matches.map((match, i) => (
+          <motion.div
+            key={match['@id'] || i}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="p-2 bg-black/40 border border-[#4a3c2b] rounded flex flex-col gap-1 text-left"
+          >
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] text-[#ffd700] font-bold truncate max-w-[150px]">{match.name}</span>
+              <span className={`text-[9px] px-1.5 py-0.5 rounded ${match.status === 'Active' ? 'bg-[#b8860b] text-black' : match.status === 'Upcoming' ? 'bg-[#4a3c2b] text-white' : 'bg-[#201812] text-gray-400'}`}>
+                {match.status}
+              </span>
+            </div>
+            <div className="text-[9px] text-[#a89472]">
+               Opponent: {match.opponent.split('/').pop().replace(/-/g, ' ')}
+            </div>
+            {match.result && (
+               <div className="text-[9px] text-[#e5cc98]">
+                 Result: <span className="uppercase font-bold">{match.result}</span>
+               </div>
+            )}
+          </motion.div>
+        ))
+      )}
+    </div>
+  );
+}
 
 export default function App() {
   const [gateOpen, setGateOpen] = useState(false);
@@ -9,8 +232,8 @@ export default function App() {
     <div className="flex justify-center min-h-screen bg-black/90 p-4 font-serif text-[#e5cc98] overflow-hidden">
       {/* Sidebar Container */}
       <motion.div
-        whileHover={{ scale: 1.02, rotate: [0, 1, -1, 0], boxShadow: "inset 0 0 40px #000, 0 0 30px rgba(255,215,0,0.4)" }}
-        transition={{ type: "tween", bounce: 0.5 }}
+        whileHover={{ boxShadow: "inset 0 0 40px #000, 0 0 30px rgba(255,215,0,0.4)" }}
+        transition={{ type: "tween", duration: 0.3 }}
         className="relative w-[300px] bg-gradient-to-b from-[#1a1a1a] to-[#0d0d0d] border-l-2 border-r-2 border-[#b8860b] shadow-[inset_0_0_20px_#000] overflow-hidden rounded-md pb-6"
       >
         
@@ -82,35 +305,22 @@ export default function App() {
 
           {/* New Members (Codex Style) */}
           <Section title="👥 NEW MEMBERS">
-            <div className="bg-black/40 border border-[#4a3c2b] p-3 rounded text-center">
-              <div className="text-xs text-[#a89472] mb-2 italic">Welcome our newest allies</div>
-              <div className="w-full bg-black border border-[#5a4629] h-[100px] flex items-center justify-center text-[10px] text-gray-500 rounded relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none" />
-                <iframe className="w-full h-full border-none relative z-0 opacity-50 group-hover:opacity-100 transition-opacity" src="about:blank" title="New Members Placeholder" />
-                <span className="absolute z-20 text-[#ffd700] drop-shadow-md font-bold tracking-wider pointer-events-none">[LOREM_IPSUM]</span>
-              </div>
-              <motion.button whileHover={{ scale: 1.1, rotate: 2, backgroundColor: "#4a3c2b" }} whileTap={{ scale: 0.8, rotate: -5 }} className="mt-3 w-full bg-gradient-to-b from-[#3a2e24] to-[#201812] border border-[#8b6508] hover:border-[#ffd700] text-[#ffd700] text-xs py-1.5 rounded transition-colors flex justify-center items-center gap-2 cursor-pointer">
-                Join the Ranks
-              </motion.button>
-            </div>
+            <NewMembersWidget />
           </Section>
 
           {/* Titled Members */}
           <Section title="♟ TITLED MEMBERS">
-            <div className="flex flex-col gap-2">
-              <TitledMember badge="GM" name="Grandmaster_Name" color="bg-[#b22222]" />
-              <TitledMember badge="IM" name="IntlMaster_Name" color="bg-[#8b4513]" />
-              <TitledMember badge="FM" name="FideMaster_Name" color="bg-[#d2691e]" />
-              <TitledMember badge="CM" name="CandMaster_Name" color="bg-[#cd853f]" />
-            </div>
+            <TitledMembersWidget />
           </Section>
 
-          {/* Kingdom Anthem */}
-          <Section title="🎵 KINGDOM ANTHEM">
-            <div className="w-full bg-black border border-[#5a4629] h-[80px] flex items-center justify-center text-[10px] text-gray-500 rounded relative overflow-hidden group">
-               <iframe className="w-full h-full border-none opacity-40 group-hover:opacity-100 transition-opacity relative z-0" src="about:blank" title="Anthem Placeholder" />
-               <span className="absolute z-10 text-[#c7a76c] drop-shadow-md italic pointer-events-none">[Music Player Iframe]</span>
-            </div>
+          {/* Events Tracker */}
+          <Section title="⚔️ EVENTS TRACKER">
+            <EventsTrackerWidget />
+          </Section>
+
+          {/* Kingdom Music Player */}
+          <Section title="🎵 KINGDOM MUSIC PLAYER">
+            <KingdomMusicPlayer />
           </Section>
 
           {/* King's Court */}
